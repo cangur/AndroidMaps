@@ -1,8 +1,12 @@
 package com.example.acer.androidmaps;
 
 import android.app.Dialog;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -13,6 +17,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+
+import java.io.IOException;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -62,5 +69,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         LatLng ll = new LatLng( lat, lng );
         CameraUpdate update = CameraUpdateFactory.newLatLngZoom( ll, zoom );
         mGoogleMap.moveCamera( update );
+    }
+
+    public void geoLocate(View view) throws IOException {
+        EditText et = (EditText) findViewById( R.id.editText );
+        String location = et.getText().toString();
+
+        Geocoder gc = new Geocoder( this );
+        List<Address> list = gc.getFromLocationName(location, 1);
+        Address address = list.get(0);
+        String locality = address.getLocality();
+
+        Toast.makeText( this,locality, Toast.LENGTH_LONG ).show();
+
+        double lat = address.getLatitude();
+        double lng = address.getLongitude();
     }
 }
